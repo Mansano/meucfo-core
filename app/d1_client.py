@@ -21,6 +21,10 @@ class D1Client:
             "Authorization": f"Bearer {self.api_token}",
             "Content-Type": "application/json"
         }
+        logger.info(f"D1 Client Initialized. Base URL: {self.base_url}")
+        # Log masked token for debugging
+        masked_token = self.api_token[:4] + "***" + self.api_token[-4:] if self.api_token else "EMPTY"
+        logger.info(f"D1 Token used: {masked_token}")
     
     async def execute(self, sql: str, params: Optional[List] = None) -> Dict[str, Any]:
         """Executa uma query SQL no D1"""
