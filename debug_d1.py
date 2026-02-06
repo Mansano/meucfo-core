@@ -34,7 +34,7 @@ async def test_connection():
     }
     
     payload = {
-        "sql": "SELECT 1 as teste, 'ok' as status",
+        "sql": "PRAGMA table_info(users);",
         "params": []
     }
     
