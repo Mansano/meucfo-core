@@ -33,15 +33,14 @@ class UserRepository:
     @staticmethod
     async def create(user_data: dict) -> Optional[int]:
         sql = """
-        INSERT INTO users (email, password, name, company_name, phone, type, profile, document)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        INSERT INTO users (email, password, name, phone, type, profile, document)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
         """
         
         params = [
             user_data['email'],
             user_data['password'],
             user_data.get('name') or user_data.get('full_name'),
-            user_data.get('company_name'),
             user_data.get('phone'),
             user_data.get('type', 'PF'),
             2 if user_data.get('is_admin') else 1,
@@ -56,10 +55,12 @@ class UserRepository:
     
     @staticmethod
     async def update_login_time(user_id: int):
-        await execute_sql(
-            "UPDATE users SET last_login = datetime('now') WHERE id = ?",
-            [user_id]
-        )
+        # Coluna last_login não existe no schema atual
+        pass
+        # await execute_sql(
+        #     "UPDATE users SET last_login = datetime('now') WHERE id = ?",
+        #     [user_id]
+        # )
     
     @staticmethod
     async def get_pending_approvals() -> List[UserInDB]:

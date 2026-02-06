@@ -96,16 +96,20 @@ async def init_db():
     users_table = """
     CREATE TABLE IF NOT EXISTS users (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
+        type TEXT NOT NULL,
+        name TEXT NOT NULL,
         email TEXT UNIQUE NOT NULL,
+        phone TEXT NOT NULL,
+        document TEXT NOT NULL,
+        area TEXT,
+        cep TEXT,
+        address TEXT,
+        state TEXT,
+        city TEXT,
+        number_complement TEXT,
+        profile INTEGER DEFAULT 1,
         password TEXT NOT NULL,
-        full_name TEXT,
-        company_name TEXT,
-        phone TEXT,
-        is_admin INTEGER NOT NULL DEFAULT 0,
-        is_approved INTEGER NOT NULL DEFAULT 0,
-        created_at TEXT DEFAULT (datetime('now')),
-        last_login TEXT,
-        metadata TEXT DEFAULT '{}'
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     )
     """
     
@@ -201,8 +205,8 @@ async def init_db():
         admin_pass_hash = hash_password(settings.APP_ADMIN_PASS)
         await execute_sql(
             """
-            INSERT INTO users (email, password, full_name, is_admin, is_approved)
-            VALUES (?, ?, ?, 1, 1)
+            INSERT INTO users (email, password, name, profile, type, phone, document)
+            VALUES (?, ?, ?, 2, 'PF', '000000000', '00000000000')
             """,
             [settings.APP_ADMIN_MAIL, admin_pass_hash, "Administrador"]
         )
