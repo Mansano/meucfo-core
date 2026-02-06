@@ -202,8 +202,12 @@ async def proxy_d1_query(query: D1Query):
         return {"success": True, "result": [raw_response]}
         
     except Exception as e:
-        logger.error(f"Erro no proxy D1: {e}")
-        return {"success": False, "errors": [{"message": str(e)}]}
+        logger.error(f"Erro no proxy D1: {e}")        return {"success": False, "errors": [{"message": str(e)}]}
+
+@app.get("/api/debug/users")
+async def debug_users():
+    """Rota temporária para listar usuários"""
+    return await execute_sql("SELECT * FROM users")
 
 if __name__ == "__main__":
     import uvicorn
