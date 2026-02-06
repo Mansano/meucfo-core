@@ -28,18 +28,30 @@ class D1Client:
 
     async def execute(self, sql: str, params: Optional[List] = None) -> Dict[str, Any]:
         """Executa uma query SQL no D1"""
-        payload = {"sql": sql}
-        if params:
-            payload["params"] = params
+        # Sempre enviar params como lista, mesmo que vazia
+        safe_params = params if params is not None else []
+        
+        payload = {
+            "sql": sql,
+            "params": safe_params
+        }
         
         async with httpx.AsyncClient(timeout=30.0) as client:
             try:
+                # Log Payload (debug)
+                logger.info(f"D1 Executing. Payload: {json.dumps(payload)}")
+                
                 response = await client.post(
                     f"{self.base_url}/query",
                     headers=self.headers,
                     json=payload
                 )
-                response.raise_for_status()
+                
+                if response.status_code >= 400:
+                    logger.error(f"D1 Error Status: {response.status_code}")
+                    logger.error(f"D1 Error Body: {response.text}")
+                    return {"success": False, "error": f"HTTP {response.status_code}: {response.text}"}
+                
                 result = response.json()
                 
                 if not result.get("success"):
