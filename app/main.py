@@ -227,6 +227,25 @@ async def fix_my_password():
         return {"success": True, "message": "Senha do usuario ID 1 corrigida para hash seguro"}
     return {"success": False, "error": result}
 
+@app.get("/api/debug/test-id")
+async def debug_test_id():
+    """Teste isolado do get_by_id"""
+    from app.repositories.users import UserRepository
+    
+    # Teste 1: Buscar ID 1 como Inteiro
+    user_int = await UserRepository.get_by_id(1)
+    
+    # Teste 2: Buscar ID 1 como String (caso o banco esteja confuso)
+    # Precisamos chamar o SQL direto pra simular string, pois o get_by_id tipa como int
+    sql_result_str = await execute_sql("SELECT * FROM users WHERE id = ?", ["1"])
+    
+    return {
+        "user_int_found": user_int is not None,
+        "user_int_data": user_int,
+        "raw_query_str_found": len(sql_result_str.get("results", [])) > 0 if sql_result_str.get("success") else "error",
+        "raw_query_str_result": sql_result_str
+    }
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(
