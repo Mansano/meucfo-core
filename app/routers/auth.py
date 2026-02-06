@@ -142,7 +142,9 @@ async def logout(request: Request, current_user: dict = Depends(get_current_user
 @router.get("/me", response_model=UserResponse)
 async def get_current_user_info(current_user: dict = Depends(get_current_user)):
     """Obtém informações do usuário atual"""
+    print(f"DEBUG: /me called for user_id: {current_user['user_id']} ({type(current_user['user_id'])})")
     user = await UserRepository.get_by_id(current_user["user_id"])
+    print(f"DEBUG: Repository returned: {user}")
     if not user:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
