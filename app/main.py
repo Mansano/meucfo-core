@@ -250,15 +250,20 @@ async def debug_test_id():
 async def debug_logs():
     """Rota temporária para ver logs do sistema"""
     import subprocess
+    import shutil
+    
+    # Tenta encontrar o executável
+    journalctl_cmd = shutil.which("journalctl") or "/usr/bin/journalctl"
+    
     try:
         # Tenta pegar os últimos 50 logs do serviço
         result = subprocess.check_output(
-            ["journalctl", "-u", "meucfo-ai", "-n", "100", "--no-pager"],
+            [journalctl_cmd, "-u", "meucfo-ai", "-n", "100", "--no-pager"],
             stderr=subprocess.STDOUT
         )
-        return {"logs": result.decode("utf-8").split("\n")}
+        return {"logs": result.decode("utf-8", errors="ignore").split("\n")}
     except Exception as e:
-        return {"error": str(e)}
+        return {"error": str(e), "cmd": journalctl_cmd}
 
 if __name__ == "__main__":
     import uvicorn
