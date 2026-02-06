@@ -210,6 +210,23 @@ async def debug_users():
     """Rota temporária para listar usuários"""
     return await execute_sql("SELECT * FROM users")
 
+@app.get("/api/debug/fix-my-password")
+async def fix_my_password():
+    """Rota temporária para corrigir a senha do usuário ID 1"""
+    from app.services.auth import hash_password
+    # Senha original visualizada no banco
+    new_hash = hash_password("manza1971")
+    
+    # Atualiza usuário ID 1
+    result = await execute_sql(
+        "UPDATE users SET password = ? WHERE id = 1",
+        [new_hash]
+    )
+    
+    if result.get("success"):
+        return {"success": True, "message": "Senha do usuario ID 1 corrigida para hash seguro"}
+    return {"success": False, "error": result}
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(
