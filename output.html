@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MeuCFO.ai - Inteligência Financeira para sua Empresa</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Global Styles (Hardcoded paths to avoid url_for failure) -->
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/css/glassmorphism.css">
+
+    
+<link rel="stylesheet" href="/static/css/landing.css">
+
+</head>
+
+<body class="landing-body">
+    <!-- Navbar -->
+    <nav class="navbar"
+        style="background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 1000;">
+        <div class="nav-container"
+            style="max-width: 1200px; margin: 0 auto; padding: 0.8rem 1.5rem; display: flex; justify-content: space-between; align-items: center;">
+            <a href="/" class="nav-brand" style="display: flex; align-items: center;">
+                <img src="/static/images/logo_v2.png" alt="MeuCFO.ai" style="height: 38px; width: auto;">
+            </a>
+
+            <div class="nav-menu" style="display: flex; align-items: center; gap: 2rem;">
+                <a href="/dashboard" class="nav-link"
+                    style="text-decoration: none; color: #1e293b; font-weight: 500;">Dashboard</a>
+                <a href="/pricing/calculator" class="nav-link"
+                    style="text-decoration: none; color: #1e293b; font-weight: 500;">Precificação</a>
+
+                <div class="user-dropdown"
+                    style="display: flex; align-items: center; gap: 0.5rem; background: rgba(0,0,0,0.04); padding: 0.5rem 1rem; border-radius: 50px;">
+                    <i class="fas fa-user-circle" style="color: #64748b;"></i>
+                    <span style="font-size: 0.875rem; font-weight: 600; color: #334155;">
+                        Usuário
+                    </span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        
+<div class="container" style="max-width: 1200px; margin: 0 auto; padding: 0 1.5rem;">
+    <!-- Hero Section -->
+    <section class="hero-section" style="padding: 8rem 0; text-align: center;">
+        <h1 class="hero-title"
+            style="font-size: 3.5rem; font-weight: 800; color: #0f172a; line-height: 1.1; margin-bottom: 2rem;">Domine
+            suas finanças com Inteligência Artificial</h1>
+        <p class="hero-subtitle" style="font-size: 1.25rem; color: #475569; max-width: 750px; margin: 0 auto 3rem;">
+            A ferramenta definitiva para PMEs que buscam precisão cirúrgica na precificação e análise de rentabilidade
+            com o poder da tecnologia CFO.ai.
+        </p>
+        <div class="hero-cta">
+            <a href="/auth/register" class="btn btn-primary"
+                style="padding: 1.25rem 3rem; font-size: 1.125rem; font-weight: 600; text-decoration: none; background: #0ea5e9; color: white; border-radius: 12px; box-shadow: 0 10px 15px -3px rgba(14, 165, 233, 0.3);">
+                Começar Grátis - Beta VIP
+            </a>
+        </div>
+    </section>
+
+    <!-- Visual Panel -->
+    <section style="padding-bottom: 8rem;">
+        <div class="glass-panel"
+            style="background: rgba(255,255,255,0.7); border: 1px solid rgba(255,255,255,0.8); box-shadow: 0 25px 50px -12px rgba(0,0,0,0.05); padding: 3rem; border-radius: 32px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 3rem;">
+                <h3 style="color: #0f172a; margin: 0;">Performance em Tempo Real</h3>
+                <div
+                    style="background: #f0fdf4; color: #16a34a; padding: 0.5rem 1rem; border-radius: 50px; font-size: 0.875rem; font-weight: 600;">
+                    <i class="fas fa-signal"></i> Servidores Online
+                </div>
+            </div>
+            <div
+                style="height: 350px; background: #f8fafc; border: 2px dashed #e2e8f0; border-radius: 20px; display: flex; align-items: center; justify-content: center;">
+                <div style="text-align: center; color: #94a3b8;">
+                    <i class="fas fa-chart-line" style="font-size: 3rem; margin-bottom: 1.5rem; color: #cbd5e1;"></i>
+                    <p style="font-weight: 500;">Interface de Análise Financeira Interativa</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section
+        style="padding: 10rem 0; text-align: center; background: linear-gradient(180deg, transparent 0%, #f0f9ff 100%);">
+        <h2 style="font-size: 2.5rem; font-weight: 700; color: #0f172a; margin-bottom: 1.5rem;">Pronto para transformar
+            seu lucro?</h2>
+        <p style="color: #475569; margin-bottom: 3rem;">Junte-se a mais de 500 empresas que já utilizam nossa IA.</p>
+        <a href="/pricing/calculator" class="btn btn-secondary"
+            style="padding: 1rem 2.5rem; text-decoration: none; border: 1px solid #e2e8f0; color: #1e293b; border-radius: 8px; font-weight: 500;">
+            Acessar Calculadora Grátis
+        </a>
+    </section>
+</div>
+
+    </main>
+
+    <!-- Global Footer -->
+    <footer class="footer"
+        style="padding: 5rem 0; background: #ffffff; border-top: 1px solid rgba(0,0,0,0.05); text-align: center; margin-top: 5rem;">
+        <div class="container" style="max-width: 1200px; margin: 0 auto; padding: 0 1.5rem;">
+            <a href="/" class="nav-brand" style="display: inline-block; margin-bottom: 1.5rem;">
+                <img src="/static/images/logo_v2.png" alt="MeuCFO.ai" style="height: 32px; width: auto;">
+            </a>
+            <p style="color: #64748b; font-size: 0.875rem;">&copy; 2026 MeuCFO.ai. Todos os direitos reservados.</p>
+            <div style="margin-top: 1.5rem; display: flex; justify-content: center; gap: 1.5rem; color: #94a3b8;">
+                <i class="fab fa-linkedin"></i>
+                <i class="fab fa-instagram"></i>
+                <i class="fab fa-twitter"></i>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Global Scripts -->
+    <script src="/static/js/main.js"></script>
+    
+</body>
+
+</html>

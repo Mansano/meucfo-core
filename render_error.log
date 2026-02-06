@@ -1,0 +1,24 @@
+Rendering failed: 'get_flashed_messages' is undefined
+Traceback (most recent call last):
+  File "C:\Projetos\WS_TRAMPO1\meucfo-ai\test_render.py", line 28, in test_render
+    response = templates.TemplateResponse(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mansa\miniforge3\Lib\site-packages\starlette\templating.py", line 209, in TemplateResponse
+    return _TemplateResponse(
+           ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mansa\miniforge3\Lib\site-packages\starlette\templating.py", line 40, in __init__
+    content = template.render(context)
+              ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mansa\miniforge3\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+  File "C:\Users\mansa\miniforge3\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "app\templates\dashboard.html", line 1, in top-level template code
+    {% extends "base.html" %}
+  File "app\templates\base.html", line 138, in top-level template code
+    {% block extra_js %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mansa\miniforge3\Lib\site-packages\jinja2\utils.py", line 92, in from_obj
+    if hasattr(obj, "jinja_pass_arg"):
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+jinja2.exceptions.UndefinedError: 'get_flashed_messages' is undefined

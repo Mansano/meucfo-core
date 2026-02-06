@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %}MeuCFO.ai - Inteligência Financeira para sua Empresa{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="/static/css/landing.css">
+{% endblock %}
+
+{% block body_class %}landing-body{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width: 1200px; margin: 0 auto; padding: 0 1.5rem;">
+    <!-- Hero Section -->
+    <section class="hero-section" style="padding: 8rem 0; text-align: center;">
+        <h1 class="hero-title"
+            style="font-size: 3.5rem; font-weight: 800; color: #0f172a; line-height: 1.1; margin-bottom: 2rem;">Domine
+            suas finanças com Inteligência Artificial</h1>
+        <p class="hero-subtitle" style="font-size: 1.25rem; color: #475569; max-width: 750px; margin: 0 auto 3rem;">
+            A ferramenta definitiva para PMEs que buscam precisão cirúrgica na precificação e análise de rentabilidade
+            com o poder da tecnologia CFO.ai.
+        </p>
+        <div class="hero-cta">
+            <a href="/auth/register" class="btn btn-primary"
+                style="padding: 1.25rem 3rem; font-size: 1.125rem; font-weight: 600; text-decoration: none; background: #0ea5e9; color: white; border-radius: 12px; box-shadow: 0 10px 15px -3px rgba(14, 165, 233, 0.3);">
+                Começar Grátis - Beta VIP
+            </a>
+        </div>
+    </section>
+
+    <!-- Visual Panel -->
+    <section style="padding-bottom: 8rem;">
+        <div class="glass-panel"
+            style="background: rgba(255,255,255,0.7); border: 1px solid rgba(255,255,255,0.8); box-shadow: 0 25px 50px -12px rgba(0,0,0,0.05); padding: 3rem; border-radius: 32px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 3rem;">
+                <h3 style="color: #0f172a; margin: 0;">Performance em Tempo Real</h3>
+                <div
+                    style="background: #f0fdf4; color: #16a34a; padding: 0.5rem 1rem; border-radius: 50px; font-size: 0.875rem; font-weight: 600;">
+                    <i class="fas fa-signal"></i> Servidores Online
+                </div>
+            </div>
+            <div
+                style="height: 350px; background: #f8fafc; border: 2px dashed #e2e8f0; border-radius: 20px; display: flex; align-items: center; justify-content: center;">
+                <div style="text-align: center; color: #94a3b8;">
+                    <i class="fas fa-chart-line" style="font-size: 3rem; margin-bottom: 1.5rem; color: #cbd5e1;"></i>
+                    <p style="font-weight: 500;">Interface de Análise Financeira Interativa</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section
+        style="padding: 10rem 0; text-align: center; background: linear-gradient(180deg, transparent 0%, #f0f9ff 100%);">
+        <h2 style="font-size: 2.5rem; font-weight: 700; color: #0f172a; margin-bottom: 1.5rem;">Pronto para transformar
+            seu lucro?</h2>
+        <p style="color: #475569; margin-bottom: 3rem;">Junte-se a mais de 500 empresas que já utilizam nossa IA.</p>
+        <a href="/pricing/calculator" class="btn btn-secondary"
+            style="padding: 1rem 2.5rem; text-decoration: none; border: 1px solid #e2e8f0; color: #1e293b; border-radius: 8px; font-weight: 500;">
+            Acessar Calculadora Grátis
+        </a>
+    </section>
+</div>
+{% endblock %}

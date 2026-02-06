@@ -1,0 +1,538 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - MeuCFO.ai{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Dashboard Bento Grid */
+    .dashboard-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        grid-auto-rows: minmax(160px, auto);
+        gap: 1.5rem;
+        margin-bottom: 2.5rem;
+    }
+
+    @media (max-width: 1024px) {
+        .dashboard-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @media (max-width: 640px) {
+        .dashboard-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .card {
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-color);
+        border-radius: 20px;
+        padding: 1.5rem;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        cursor: default;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+        border-color: rgba(34, 197, 94, 0.3);
+        box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+    }
+
+    .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.25rem;
+    }
+
+    .card-title {
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: var(--text-secondary);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .card-icon {
+        width: 42px;
+        height: 42px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+    }
+
+    .icon-primary {
+        background: rgba(34, 197, 94, 0.1);
+        color: var(--primary);
+    }
+
+    .icon-success {
+        background: rgba(34, 197, 94, 0.1);
+        color: var(--primary);
+    }
+
+    .icon-warning {
+        background: rgba(245, 158, 11, 0.1);
+        color: var(--warning);
+    }
+
+    .icon-info {
+        background: rgba(59, 130, 246, 0.1);
+        color: var(--info);
+    }
+
+    .card-value {
+        font-size: 1.875rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin-bottom: 0.5rem;
+        letter-spacing: -0.02em;
+    }
+
+    .card-change {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.8125rem;
+        font-weight: 500;
+    }
+
+    .change-positive {
+        color: var(--primary);
+    }
+
+    .change-negative {
+        color: var(--danger);
+    }
+
+    /* Main Chart Bento Span */
+    .main-chart {
+        grid-column: span 3;
+        grid-row: span 2;
+        min-height: 400px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    @media (max-width: 1024px) {
+        .main-chart {
+            grid-column: span 2;
+        }
+    }
+
+    @media (max-width: 640px) {
+        .main-chart {
+            grid-column: span 1;
+        }
+    }
+
+    .chart-container {
+        flex-grow: 1;
+        min-height: 0;
+        margin-top: 1rem;
+    }
+
+    .chart-controls .form-select {
+        padding: 0.5rem 2rem 0.5rem 1rem;
+        font-size: 0.8125rem;
+        background-color: rgba(255, 255, 255, 0.05);
+        border-radius: 8px;
+        border-color: var(--border-color);
+    }
+
+    .quick-actions {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.5rem;
+        margin-top: 1.5rem;
+    }
+
+    .action-btn {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 1.75rem;
+        background: var(--bg-secondary);
+        border-radius: 20px;
+        border: 1px solid var(--border-color);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        text-decoration: none;
+        color: inherit;
+        cursor: pointer;
+    }
+
+    .action-btn:hover {
+        border-color: var(--primary);
+        transform: translateY(-4px);
+        box-shadow: 0 10px 30px -10px rgba(34, 197, 94, 0.2);
+    }
+
+    .action-icon {
+        width: 48px;
+        height: 48px;
+        background: rgba(34, 197, 94, 0.1);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        margin-bottom: 1.25rem;
+        color: var(--primary);
+    }
+
+    .action-btn h4 {
+        font-size: 1.125rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: var(--text-primary);
+    }
+
+    .action-btn p {
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+        line-height: 1.5;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header">
+        <h1>Dashboard Financeiro</h1>
+        <p class="subtitle">Bem-vindo de volta, {{ current_user.full_name or current_user.email if current_user else
+            'Visitante' }}!</p>
+    </div>
+
+    <!-- Cards de Métricas -->
+    <div class="dashboard-grid">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Margem Líquida</h3>
+                <div class="card-icon icon-success">
+                    <i class="fas fa-percentage"></i>
+                </div>
+            </div>
+            <div class="card-value" id="net-margin">--%</div>
+            <div class="card-change">
+                <span class="change-positive">+2.5%</span>
+                <span>vs último mês</span>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Faturamento Mensal</h3>
+                <div class="card-icon icon-primary">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+            </div>
+            <div class="card-value" id="monthly-revenue">R$ --</div>
+            <div class="card-change">
+                <span class="change-positive">+8.2%</span>
+                <span>vs último mês</span>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Giro de Estoque</h3>
+                <div class="card-icon icon-warning">
+                    <i class="fas fa-boxes"></i>
+                </div>
+            </div>
+            <div class="card-value" id="stock-turnover">--x</div>
+            <div class="card-change">
+                <span class="change-negative">-0.3x</span>
+                <span>vs último mês</span>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Custos Operacionais</h3>
+                <div class="card-icon icon-info">
+                    <i class="fas fa-money-bill-wave"></i>
+                </div>
+            </div>
+            <div class="card-value" id="operational-costs">R$ --</div>
+            <div class="card-change">
+                <span class="change-positive">-1.8%</span>
+                <span>vs último mês</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gráfico Principal -->
+    <div class="card main-chart">
+        <div class="card-header">
+            <h3 class="card-title">Desempenho Financeiro (Últimos 12 Meses)</h3>
+            <div class="chart-controls">
+                <select id="chart-period" class="form-select">
+                    <option value="1m">1 Mês</option>
+                    <option value="3m">3 Meses</option>
+                    <option value="6m">6 Meses</option>
+                    <option value="1y" selected>1 Ano</option>
+                    <option value="all">Todo Período</option>
+                </select>
+            </div>
+        </div>
+        <div class="chart-container">
+            <canvas id="performanceChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Ações Rápidas -->
+    <h2>Ações Rápidas</h2>
+    <div class="quick-actions">
+        <a href="/pricing/calculator" class="action-btn">
+            <div class="action-icon">
+                <i class="fas fa-calculator"></i>
+            </div>
+            <h4>Calcular Preço</h4>
+            <p>Formação de preço para varejo e serviços</p>
+        </a>
+
+        <a href="/analysis/competitive" class="action-btn">
+            <div class="action-icon">
+                <i class="fas fa-chart-bar"></i>
+            </div>
+            <h4>Análise Competitiva</h4>
+            <p>Compare com concorrentes e otimize</p>
+        </a>
+
+        <a href="/pricing/calculations" class="action-btn">
+            <div class="action-icon">
+                <i class="fas fa-history"></i>
+            </div>
+            <h4>Histórico de Cálculos</h4>
+            <p>Revise cálculos anteriores</p>
+        </a>
+
+
+    </div>
+
+    <!-- Últimos Cálculos -->
+    <div class="card" style="margin-top: 2rem;">
+        <div class="card-header">
+            <h3 class="card-title">Últimos Cálculos de Precificação</h3>
+            <a href="/pricing/calculations" class="btn btn-link">Ver todos</a>
+        </div>
+        <div class="table-responsive">
+            <table class="data-table" id="recent-calculations">
+                <thead>
+                    <tr>
+                        <th>Data</th>
+                        <th>Tipo</th>
+                        <th>Custo Produto</th>
+                        <th>Preço Calculado</th>
+                        <th>Margem</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Dados serão carregados via JavaScript -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Carregar dados do dashboard
+        loadDashboardData();
+        loadRecentCalculations();
+
+        // Inicializar gráfico
+        initPerformanceChart();
+
+        // Atualizar dados a cada 60 segundos
+        setInterval(loadDashboardData, 60000);
+    });
+
+    async function loadDashboardData() {
+        try {
+            const response = await fetch('/dashboard/metrics');
+            const data = await response.json();
+
+            if (data.success) {
+                // Atualizar cards
+                document.getElementById('net-margin').textContent =
+                    data.metrics.net_margin + '%';
+                document.getElementById('monthly-revenue').textContent =
+                    'R$ ' + formatCurrency(data.metrics.monthly_revenue);
+                document.getElementById('stock-turnover').textContent =
+                    data.metrics.stock_turnover + 'x';
+                document.getElementById('operational-costs').textContent =
+                    'R$ ' + formatCurrency(data.metrics.operational_costs);
+
+                // Atualizar gráfico se existir
+                if (window.performanceChart && data.chart_data) {
+                    updateChart(data.chart_data);
+                }
+            }
+        } catch (error) {
+            console.error('Erro ao carregar dados:', error);
+        }
+    }
+
+    async function loadRecentCalculations() {
+        try {
+            const response = await fetch('/pricing/calculations?limit=5');
+            const data = await response.json();
+
+            const tbody = document.querySelector('#recent-calculations tbody');
+            if (data.calculations && data.calculations.length > 0) {
+                tbody.innerHTML = data.calculations.map(calc => `
+                <tr>
+                    <td>${new Date(calc.created_at).toLocaleDateString('pt-BR')}</td>
+                    <td>${calc.business_type}</td>
+                    <td>R$ ${formatCurrency(calc.product_cost)}</td>
+                    <td>R$ ${formatCurrency(calc.calculated_price)}</td>
+                    <td><span class="badge ${calc.margin >= 20 ? 'badge-success' : 'badge-warning'}">
+                        ${calc.margin}%</span></td>
+                    <td>
+                        <a href="/pricing/calculations/${calc.id}" class="btn-icon" title="Ver detalhes">
+                            <i class="fas fa-eye"></i>
+                        </a>
+                    </td>
+                </tr>
+            `).join('');
+            } else {
+                tbody.innerHTML = `
+                <tr>
+                    <td colspan="6" class="text-center">
+                        Nenhum cálculo encontrado. <a href="/pricing/calculator">Faça seu primeiro cálculo</a>
+                    </td>
+                </tr>
+            `;
+            }
+        } catch (error) {
+            console.error('Erro ao carregar cálculos:', error);
+        }
+    }
+
+    function initPerformanceChart() {
+        const ctx = document.getElementById('performanceChart').getContext('2d');
+
+        window.performanceChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Faturamento',
+                    data: [],
+                    borderColor: '#22C55E',
+                    backgroundColor: 'rgba(34, 197, 94, 0.1)',
+                    tension: 0.4,
+                    fill: true,
+                    borderWidth: 3,
+                    pointRadius: 4,
+                    pointBackgroundColor: '#22C55E'
+                }, {
+                    label: 'Lucro Líquido',
+                    data: [],
+                    borderColor: '#3B82F6',
+                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                    tension: 0.4,
+                    fill: true,
+                    borderWidth: 3,
+                    pointRadius: 4,
+                    pointBackgroundColor: '#3B82F6'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: {
+                            color: '#94A3B8',
+                            font: {
+                                family: 'IBM Plex Sans',
+                                size: 12
+                            }
+                        }
+                    },
+                    tooltip: {
+                        mode: 'index',
+                        intersect: false,
+                        backgroundColor: '#0F172A',
+                        titleColor: '#F8FAFC',
+                        bodyColor: '#94A3B8',
+                        borderColor: 'rgba(255, 255, 255, 0.1)',
+                        borderWidth: 1,
+                        padding: 12,
+                        callbacks: {
+                            label: function (context) {
+                                let label = context.dataset.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                if (context.parsed.y !== null) {
+                                    label += new Intl.NumberFormat('pt-BR', {
+                                        style: 'currency',
+                                        currency: 'BRL'
+                                    }).format(context.parsed.y);
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: {
+                            display: false
+                        },
+                        ticks: {
+                            color: '#64748B'
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.05)'
+                        },
+                        ticks: {
+                            color: '#64748B',
+                            callback: function (value) {
+                                return 'R$ ' + value.toLocaleString('pt-BR');
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    function updateChart(data) {
+        if (window.performanceChart && data) {
+            window.performanceChart.data.labels = data.labels;
+            window.performanceChart.data.datasets[0].data = data.revenue;
+            window.performanceChart.data.datasets[0].borderColor = '#22C55E';
+            window.performanceChart.data.datasets[0].backgroundColor = 'rgba(34, 197, 94, 0.1)';
+            window.performanceChart.data.datasets[1].data = data.profit;
+            window.performanceChart.data.datasets[1].borderColor = '#3B82F6';
+            window.performanceChart.data.datasets[1].backgroundColor = 'rgba(59, 130, 246, 0.1)';
+            window.performanceChart.update();
+        }
+    }
+
+    function formatCurrency(value) {
+        return new Intl.NumberFormat('pt-BR', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        }).format(value);
+    }
+</script>
+{% endblock %}

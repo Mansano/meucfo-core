@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}MeuCFO.ai - Inteligência Financeira{% endblock %}</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Global Styles (Hardcoded paths to avoid url_for failure) -->
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/css/glassmorphism.css">
+
+    {% block extra_css %}{% endblock %}
+</head>
+
+<body class="{% block body_class %}{% endblock %}">
+    <!-- Navbar -->
+    <nav class="navbar" style="position: sticky; top: 1.5rem; z-index: 1000; padding: 0 1rem; pointer-events: none;">
+        <div class="nav-container"
+            style="max-width: 1100px; margin: 0 auto; padding: 0.6rem 2rem; display: flex; justify-content: space-between; align-items: center; background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.5); box-shadow: 0 8px 32px -4px rgba(0,0,0,0.08); border-radius: 100px; pointer-events: auto;">
+            <a href="/" class="nav-brand" style="display: flex; align-items: center;">
+                <img src="/static/images/logo_v2.png" alt="MeuCFO.ai"
+                    style="height: 44px; width: auto; transition: transform 0.2s ease;">
+            </a>
+
+            <div class="nav-menu" style="display: flex; align-items: center; gap: 2.5rem;">
+                <a href="/dashboard" class="nav-link"
+                    style="text-decoration: none; color: #1e293b; font-weight: 600; font-size: 0.95rem; opacity: 0.8; transition: opacity 0.2s;">Dashboard</a>
+                <a href="/pricing/calculator" class="nav-link"
+                    style="text-decoration: none; color: #1e293b; font-weight: 600; font-size: 0.95rem; opacity: 0.8; transition: opacity 0.2s;">Precificação</a>
+
+                <div class="user-dropdown"
+                    style="display: flex; align-items: center; gap: 0.75rem; background: #0f172a; padding: 0.6rem 1.25rem; border-radius: 50px; color: white;">
+                    <i class="fas fa-user-circle" style="color: rgba(255,255,255,0.7);"></i>
+                    <span style="font-size: 0.85rem; font-weight: 600; letter-spacing: -0.01em;">
+                        {{ current_user.email if (current_user and current_user.email) else 'Acessar Conta' }}
+                    </span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Global Footer -->
+    <footer class="footer"
+        style="padding: 5rem 0; background: #ffffff; border-top: 1px solid rgba(0,0,0,0.05); text-align: center; margin-top: 5rem;">
+        <div class="container" style="max-width: 1200px; margin: 0 auto; padding: 0 1.5rem;">
+            <a href="/" class="nav-brand" style="display: inline-block; margin-bottom: 1.5rem;">
+                <img src="/static/images/logo_v2.png" alt="MeuCFO.ai" style="height: 48px; width: auto;">
+            </a>
+            <p style="color: #64748b; font-size: 0.875rem;">&copy; 2026 MeuCFO.ai. Todos os direitos reservados.</p>
+            <div style="margin-top: 1.5rem; display: flex; justify-content: center; gap: 1.5rem; color: #94a3b8;">
+                <i class="fab fa-linkedin"></i>
+                <i class="fab fa-instagram"></i>
+                <i class="fab fa-twitter"></i>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Global Scripts -->
+    <script src="/static/js/main.js"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+
+</html>

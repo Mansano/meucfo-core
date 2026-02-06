@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Precificação - MeuCFO.ai</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Global Styles (Hardcoded paths to avoid url_for failure) -->
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/css/glassmorphism.css">
+
+    
+</head>
+
+<body class="">
+    <!-- Navbar -->
+    <nav class="navbar"
+        style="background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 1000;">
+        <div class="nav-container"
+            style="max-width: 1200px; margin: 0 auto; padding: 0.8rem 1.5rem; display: flex; justify-content: space-between; align-items: center;">
+            <a href="/" class="nav-brand" style="display: flex; align-items: center;">
+                <img src="/static/images/logo_v2.png" alt="MeuCFO.ai" style="height: 38px; width: auto;">
+            </a>
+
+            <div class="nav-menu" style="display: flex; align-items: center; gap: 2rem;">
+                <a href="/dashboard" class="nav-link"
+                    style="text-decoration: none; color: #1e293b; font-weight: 500;">Dashboard</a>
+                <a href="/pricing/calculator" class="nav-link"
+                    style="text-decoration: none; color: #1e293b; font-weight: 500;">Precificação</a>
+
+                <div class="user-dropdown"
+                    style="display: flex; align-items: center; gap: 0.5rem; background: rgba(0,0,0,0.04); padding: 0.5rem 1rem; border-radius: 50px;">
+                    <i class="fas fa-user-circle" style="color: #64748b;"></i>
+                    <span style="font-size: 0.875rem; font-weight: 600; color: #334155;">
+                        Usuário
+                    </span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        
+<div class="container" style="padding-top: 2rem;">
+    <div class="page-header" style="margin-bottom: 3rem; text-align: center;">
+        <h1 style="font-size: 2.5rem; color: var(--text-primary);">Calculadora de Precificação</h1>
+        <p style="color: var(--text-secondary); max-width: 600px; margin: 0.5rem auto;">Forme seus preços com precisão
+            cirúrgica e garanta a rentabilidade do seu negócio.</p>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1.5fr 1fr; gap: 2rem; align-items: start;">
+        <!-- Formulário -->
+        <div class="glass-panel" style="padding: 2.5rem; border-radius: 32px; background: #ffffff;">
+            <form id="pricing-form" style="display: grid; gap: 1.5rem;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div class="form-group">
+                        <label
+                            style="display: block; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.875rem;">Tipo
+                            de Negócio</label>
+                        <select name="business_type" class="form-select"
+                            style="width: 100%; padding: 0.75rem; border-radius: 12px; border: 1px solid #E2E8F0; background: #F8FAFC;">
+                            <option value="varejo">Varejo / Venda de Produtos</option>
+                            <option value="servicos">Prestação de Serviços</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label
+                            style="display: block; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.875rem;">Categoria
+                            do Produto</label>
+                        <select name="product_type" class="form-select"
+                            style="width: 100%; padding: 0.75rem; border-radius: 12px; border: 1px solid #E2E8F0; background: #F8FAFC;">
+                            <option value="alimenticio">Alimentício</option>
+                            <option value="eletronicos">Eletrônicos</option>
+                            <option value="vestuario">Vestuário</option>
+                            <option value="farmacia">Farmácia</option>
+                            <option value="servicos">Serviços</option>
+                            <option value="outros">Outros</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div class="form-group">
+                        <label
+                            style="display: block; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.875rem;">Custo
+                            Base (R$)</label>
+                        <input type="number" step="0.01" name="product_cost" value="100.00" class="input"
+                            style="width: 100%; padding: 0.75rem; border-radius: 12px; border: 1px solid #E2E8F0; background: #F8FAFC;">
+                    </div>
+                    <div class="form-group">
+                        <label
+                            style="display: block; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.875rem;">Frete
+                            e Seguro (R$)</label>
+                        <input type="number" step="0.01" name="shipping_insurance" value="0.00" class="input"
+                            style="width: 100%; padding: 0.75rem; border-radius: 12px; border: 1px solid #E2E8F0; background: #F8FAFC;">
+                    </div>
+                </div>
+
+                <hr style="border: 0; border-top: 1px solid #F1F5F9; margin: 0.5rem 0;">
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div class="form-group">
+                        <label
+                            style="display: block; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.875rem;">ICMS
+                            na Compra (%)</label>
+                        <input type="number" step="0.1" name="icms_purchase_percent" value="18.0" class="input"
+                            style="width: 100%; padding: 0.75rem; border-radius: 12px; border: 1px solid #E2E8F0; background: #F8FAFC;">
+                    </div>
+                    <div class="form-group">
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.875rem;">IPI
+                            (%)</label>
+                        <input type="number" step="0.1" name="ipi_percent" value="0.0" class="input"
+                            style="width: 100%; padding: 0.75rem; border-radius: 12px; border: 1px solid #E2E8F0; background: #F8FAFC;">
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div class="form-group">
+                        <label
+                            style="display: block; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.875rem;">Despesas
+                            Variáveis (%)</label>
+                        <input type="number" step="0.1" name="variable_expenses" value="5.0" class="input"
+                            style="width: 100%; padding: 0.75rem; border-radius: 12px; border: 1px solid #E2E8F0; background: #F8FAFC;">
+                        <small style="font-size: 0.75rem; color: var(--text-muted);">Comissões, taxas de cartão,
+                            etc.</small>
+                    </div>
+                    <div class="form-group">
+                        <label
+                            style="display: block; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.875rem;">Custos
+                            Fixos (%)</label>
+                        <input type="number" step="0.1" name="fixed_expenses_percent" value="15.0" class="input"
+                            style="width: 100%; padding: 0.75rem; border-radius: 12px; border: 1px solid #E2E8F0; background: #F8FAFC;">
+                        <small style="font-size: 0.75rem; color: var(--text-muted);">Aluguel, salários, software,
+                            etc.</small>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div class="form-group">
+                        <label
+                            style="display: block; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.875rem;">Impostos
+                            sobre Venda (%)</label>
+                        <input type="number" step="0.1" name="sale_taxes_percent" value="6.0" class="input"
+                            style="width: 100%; padding: 0.75rem; border-radius: 12px; border: 1px solid #E2E8F0; background: #F8FAFC;">
+                    </div>
+                    <div class="form-group">
+                        <label
+                            style="display: block; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.875rem;">Lucro
+                            Desejado (%)</label>
+                        <input type="number" step="0.1" name="net_profit_percent" value="20.0" class="input"
+                            style="width: 100%; padding: 0.75rem; border-radius: 12px; border: 1px solid #E2E8F0; background: #F8FAFC;">
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div class="form-group">
+                        <label
+                            style="display: block; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.875rem;">Regime
+                            Tributário</label>
+                        <select name="tax_regime" class="form-select"
+                            style="width: 100%; padding: 0.75rem; border-radius: 12px; border: 1px solid #E2E8F0; background: #F8FAFC;">
+                            <option value="simples_nacional">Simples Nacional</option>
+                            <option value="lucro_presumido">Lucro Presumido</option>
+                            <option value="lucro_real">Lucro Real</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label
+                            style="display: block; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.875rem;">Origem/Destino</label>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <input type="text" name="origin_state" value="SP" placeholder="Orig" class="input"
+                                style="width: 50%; padding: 0.75rem; border-radius: 12px; border: 1px solid #E2E8F0; background: #F8FAFC; text-transform: uppercase;">
+                            <input type="text" name="destination_state" value="SP" placeholder="Dest" class="input"
+                                style="width: 50%; padding: 0.75rem; border-radius: 12px; border: 1px solid #E2E8F0; background: #F8FAFC; text-transform: uppercase;">
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary"
+                    style="padding: 1rem; border-radius: 16px; font-weight: 700; font-size: 1.125rem; margin-top: 1rem; cursor: pointer;">
+                    <i class="fas fa-calculator" style="margin-right: 0.5rem;"></i> Calcular Preço de Venda
+                </button>
+            </form>
+        </div>
+
+        <!-- Resultados -->
+        <div id="result-container" class="glass-panel"
+            style="padding: 2.5rem; border-radius: 32px; background: #F0F9FF; border-color: #BAE6FD; display: none;">
+            <div style="text-align: center; margin-bottom: 2rem;">
+                <p
+                    style="color: var(--text-secondary); text-transform: uppercase; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.1em;">
+                    Preço Sugerido</p>
+                <h2 id="calculated-price" style="font-size: 3.5rem; color: var(--primary); margin: 0.5rem 0;">R$ 0,00
+                </h2>
+                <div id="margin-badge"
+                    style="display: inline-block; padding: 0.5rem 1.25rem; border-radius: 100px; background: #22C55E; color: white; font-weight: 700;">
+                    Margem: 0%
+                </div>
+            </div>
+
+            <div style="display: grid; gap: 1rem;">
+                <h4 style="border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 0.5rem; margin-bottom: 0.5rem;">
+                    Detalhamento de Custos</h4>
+                <div id="cost-breakdown" style="display: grid; gap: 0.75rem; font-size: 0.875rem;">
+                    <!-- Preenchido via JS -->
+                </div>
+            </div>
+
+            <div
+                style="margin-top: 2rem; padding: 1.5rem; background: #ffffff; border-radius: 20px; border: 1px solid rgba(0,0,0,0.05);">
+                <h4 style="margin-bottom: 1rem;"><i class="fas fa-lightbulb" style="color: #F59E0B;"></i> Recomendações
+                </h4>
+                <ul id="recommendations"
+                    style="padding-left: 1.25rem; font-size: 0.875rem; color: var(--text-secondary); display: grid; gap: 0.75rem;">
+                    <!-- Preenchido via JS -->
+                </ul>
+            </div>
+        </div>
+
+        <!-- Placeholder Inicial -->
+        <div id="placeholder-container" class="glass-panel"
+            style="padding: 2.5rem; border-radius: 32px; background: #F8FAFC; border: 2px dashed #E2E8F0; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%;">
+            <div style="font-size: 3rem; color: #CBD5E1; margin-bottom: 1rem;">
+                <i class="fas fa-chart-line"></i>
+            </div>
+            <h3 style="color: #64748B;">Aguardando Parâmetros</h3>
+            <p style="color: #94A3B8; font-size: 0.875rem; max-width: 250px;">Preencha o formulário ao lado para simular
+                o preço ideal para seu produto ou serviço.</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const form = document.getElementById('pricing-form');
+        const resultContainer = document.getElementById('result-container');
+        const placeholderContainer = document.getElementById('placeholder-container');
+
+        form.addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const formData = new FormData(form);
+            const data = {
+                business_type: formData.get('business_type'),
+                product_type: formData.get('product_type'),
+                tax_regime: formData.get('tax_regime'),
+                product_cost: parseFloat(formData.get('product_cost')),
+                shipping_insurance: parseFloat(formData.get('shipping_insurance')),
+                icms_purchase_percent: parseFloat(formData.get('icms_purchase_percent')),
+                ipi_percent: parseFloat(formData.get('ipi_percent')),
+                variable_expenses: parseFloat(formData.get('variable_expenses')),
+                fixed_expenses_percent: parseFloat(formData.get('fixed_expenses_percent')),
+                sale_taxes_percent: parseFloat(formData.get('sale_taxes_percent')),
+                net_profit_percent: parseFloat(formData.get('net_profit_percent')),
+                origin_state: formData.get('origin_state'),
+                destination_state: formData.get('destination_state')
+            };
+
+            try {
+                const response = await fetch('/pricing/calculate', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + localStorage.getItem('token') // Se houver auth
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    showResults(result);
+                } else {
+                    alert('Erro ao calcular: ' + (result.detail || 'Verifique os dados informados.'));
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+                alert('Erro de conexão com o servidor.');
+            }
+        });
+
+        function showResults(data) {
+            placeholderContainer.style.display = 'none';
+            resultContainer.style.display = 'block';
+
+            document.getElementById('calculated-price').textContent = 'R$ ' + data.calculated_price.toLocaleString('pt-BR', { minimumFractionDigits: 2 });
+
+            const marginBadge = document.getElementById('margin-badge');
+            marginBadge.textContent = 'Margem Real: ' + data.margin + '%';
+            marginBadge.style.background = data.margin >= 15 ? '#22C55E' : '#F59E0B';
+
+            const breakdown = document.getElementById('cost-breakdown');
+            const labels = {
+                custo_produto: 'Custo do Produto',
+                frete_seguro: 'Frete e Seguro',
+                icms_compra: 'ICMS de Compra',
+                ipi: 'IPI',
+                despesas_variaveis: 'Despesas Variáveis',
+                custo_total: 'Custo Total Acumulado',
+                despesas_fixas: 'Despesas Fixas Rateadas',
+                tributos_venda: 'Impostos sobre Venda',
+                receita_liquida: 'Lucro Líquido Real'
+            };
+
+            breakdown.innerHTML = Object.entries(data.cost_breakdown).map(([key, value]) => `
+            <div style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(0,0,0,0.03); padding-bottom: 0.25rem;">
+                <span style="color: var(--text-secondary);">${labels[key] || key}</span>
+                <span style="font-weight: 600;">R$ ${value.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
+            </div>
+        `).join('');
+
+            const recs = document.getElementById('recommendations');
+            if (data.recommendations && data.recommendations.length > 0) {
+                recs.innerHTML = data.recommendations.map(r => `<li>${r}</li>`).join('');
+            } else {
+                recs.innerHTML = '<li>Tudo certo! Sua estratégia de precificação parece sólida.</li>';
+            }
+        }
+    });
+</script>
+
+    </main>
+
+    <!-- Global Footer -->
+    <footer class="footer"
+        style="padding: 5rem 0; background: #ffffff; border-top: 1px solid rgba(0,0,0,0.05); text-align: center; margin-top: 5rem;">
+        <div class="container" style="max-width: 1200px; margin: 0 auto; padding: 0 1.5rem;">
+            <a href="/" class="nav-brand" style="display: inline-block; margin-bottom: 1.5rem;">
+                <img src="/static/images/logo_v2.png" alt="MeuCFO.ai" style="height: 32px; width: auto;">
+            </a>
+            <p style="color: #64748b; font-size: 0.875rem;">&copy; 2026 MeuCFO.ai. Todos os direitos reservados.</p>
+            <div style="margin-top: 1.5rem; display: flex; justify-content: center; gap: 1.5rem; color: #94a3b8;">
+                <i class="fab fa-linkedin"></i>
+                <i class="fab fa-instagram"></i>
+                <i class="fab fa-twitter"></i>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Global Scripts -->
+    <script src="/static/js/main.js"></script>
+    
+</body>
+
+</html>
