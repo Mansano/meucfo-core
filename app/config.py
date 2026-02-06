@@ -15,9 +15,10 @@ class Settings(BaseSettings):
     APP_ADMIN_PASS: str = "admin123"
     
     # Cloudflare D1
-    CF_ACCOUNT_ID: str = ""
-    CF_D1_DB_ID: str = ""
-    CF_D1_TOKEN: str = ""
+    # Cloudflare D1
+    CLOUDFLARE_ACCOUNT_ID: str = ""
+    CLOUDFLARE_DATABASE_ID: str = ""
+    CLOUDFLARE_API_TOKEN: str = ""
     
     # Redis
     REDIS_URL: str = "redis://localhost:6379/0"
