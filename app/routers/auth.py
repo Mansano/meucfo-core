@@ -48,7 +48,7 @@ async def register(user_data: UserCreate, request: Request):
     user_id = await UserRepository.create({
         "email": user_data.email,
         "password": password_hash,
-        "full_name": user_data.full_name,
+        "name": user_data.name or user_data.full_name, # Fallback compatibilidade
         "company_name": user_data.company_name,
         "phone": user_data.phone,
         "is_approved": False  # Requer aprovação do admin

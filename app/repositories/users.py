@@ -33,18 +33,19 @@ class UserRepository:
     @staticmethod
     async def create(user_data: dict) -> Optional[int]:
         sql = """
-        INSERT INTO users (email, password, full_name, company_name, phone, is_admin, is_approved)
-        VALUES (?, ?, ?, ?, ?, ?, ?)
+        INSERT INTO users (email, password, name, company_name, phone, type, profile, document)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
         """
         
         params = [
             user_data['email'],
             user_data['password'],
-            user_data.get('full_name'),
+            user_data.get('name') or user_data.get('full_name'),
             user_data.get('company_name'),
             user_data.get('phone'),
-            user_data.get('is_admin', 0),
-            user_data.get('is_approved', 0)
+            user_data.get('type', 'PF'),
+            2 if user_data.get('is_admin') else 1,
+            user_data.get('document', '')
         ]
         
         result = await execute_sql(sql, params)
@@ -63,7 +64,7 @@ class UserRepository:
     @staticmethod
     async def get_pending_approvals() -> List[UserInDB]:
         result = await execute_sql(
-            "SELECT * FROM users WHERE is_approved = 0 ORDER BY created_at DESC"
+            "SELECT * FROM users WHERE profile = 0 ORDER BY created_at DESC"
         )
         
         users = []
@@ -75,7 +76,7 @@ class UserRepository:
     @staticmethod
     async def approve_user(user_id: int) -> bool:
         result = await execute_sql(
-            "UPDATE users SET is_approved = 1 WHERE id = ?",
+            "UPDATE users SET profile = 1 WHERE id = ?",
             [user_id]
         )
         return result.get("success", False)
@@ -83,7 +84,7 @@ class UserRepository:
     @staticmethod
     async def reject_user(user_id: int) -> bool:
         result = await execute_sql(
-            "DELETE FROM users WHERE id = ? AND is_admin = 0",
+            "DELETE FROM users WHERE id = ? AND profile != 2",
             [user_id]
         )
         return result.get("success", False)

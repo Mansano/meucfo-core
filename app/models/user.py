@@ -6,9 +6,11 @@ from datetime import datetime
 
 class UserBase(BaseModel):
     email: EmailStr
-    full_name: Optional[str] = None
+    name: Optional[str] = None
     company_name: Optional[str] = None
     phone: Optional[str] = None
+    document: Optional[str] = None
+    type: Optional[str] = "PF"
 
 class UserCreate(UserBase):
     password: str
@@ -34,11 +36,18 @@ class UserLogin(BaseModel):
 
 class UserInDB(UserBase):
     id: int
-    password: str  # Hash da senha (armazenado como 'password' no DB por compatibilidade)
-    is_admin: bool
-    is_approved: bool
+    password: str
+    profile: int = 1  # 1=User, 2=Admin
     created_at: datetime
     last_login: Optional[datetime] = None
+    
+    @property
+    def is_admin(self) -> bool:
+        return self.profile == 2
+        
+    @property
+    def is_approved(self) -> bool:
+        return True # Frontend não tem is_approved, auto-aprova
     
     class Config:
         from_attributes = True
