@@ -13,33 +13,31 @@ logger = logging.getLogger(__name__)
 
 class D1Client:
     def __init__(self):
-        self.account_id = settings.CLOUDFLARE_ACCOUNT_ID.strip()
-        self.database_id = settings.CLOUDFLARE_DATABASE_ID.strip()
-        self.api_token = settings.CLOUDFLARE_API_TOKEN.strip()
+        # Strip whitespace, quotes (single/double), and slashes from IDs
+        self.account_id = settings.CLOUDFLARE_ACCOUNT_ID.strip().strip("'").strip('"').strip("/")
+        self.database_id = settings.CLOUDFLARE_DATABASE_ID.strip().strip("'").strip('"').strip("/")
+        self.api_token = settings.CLOUDFLARE_API_TOKEN.strip().strip("'").strip('"')
+        
         self.base_url = f"https://api.cloudflare.com/client/v4/accounts/{self.account_id}/d1/database/{self.database_id}"
         self.headers = {
             "Authorization": f"Bearer {self.api_token}",
             "Content-Type": "application/json"
         }
-        logger.info(f"D1 Client Initialized. Base URL: {self.base_url}")
-        # Log masked token for debugging
-        masked_token = self.api_token[:4] + "***" + self.api_token[-4:] if self.api_token else "EMPTY"
-        logger.info(f"D1 Token used: {masked_token}")
-    
+        # Log REPR to see invisible characters
+        logger.info(f"D1 Client URL REPR: {repr(self.base_url)}")
+
     async def execute(self, sql: str, params: Optional[List] = None) -> Dict[str, Any]:
         """Executa uma query SQL no D1"""
-        if params is None:
-            params = []
+        payload = {"sql": sql}
+        if params:
+            payload["params"] = params
         
         async with httpx.AsyncClient(timeout=30.0) as client:
             try:
                 response = await client.post(
                     f"{self.base_url}/query",
                     headers=self.headers,
-                    json={
-                        "sql": sql,
-                        "params": params
-                    }
+                    json=payload
                 )
                 response.raise_for_status()
                 result = response.json()
