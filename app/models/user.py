@@ -34,6 +34,7 @@ class UserLogin(BaseModel):
 
 class UserInDB(UserBase):
     id: int
+    password: str  # Hash da senha (armazenado como 'password' no DB por compatibilidade)
     is_admin: bool
     is_approved: bool
     created_at: datetime

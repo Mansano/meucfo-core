@@ -47,7 +47,7 @@ async def register(user_data: UserCreate, request: Request):
     # Criar usuário
     user_id = await UserRepository.create({
         "email": user_data.email,
-        "password_hash": password_hash,
+        "password": password_hash,
         "full_name": user_data.full_name,
         "company_name": user_data.company_name,
         "phone": user_data.phone,
@@ -97,7 +97,7 @@ async def login(login_data: UserLogin, request: Request):
         )
     
     # Verificar senha
-    if not verify_password(login_data.password, user.password_hash):
+    if not verify_password(login_data.password, user.password):
         await rate_limiter.record_login_attempt(identifier)
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,

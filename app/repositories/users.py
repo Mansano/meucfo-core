@@ -33,13 +33,13 @@ class UserRepository:
     @staticmethod
     async def create(user_data: dict) -> Optional[int]:
         sql = """
-        INSERT INTO users (email, password_hash, full_name, company_name, phone, is_admin, is_approved)
+        INSERT INTO users (email, password, full_name, company_name, phone, is_admin, is_approved)
         VALUES (?, ?, ?, ?, ?, ?, ?)
         """
         
         params = [
             user_data['email'],
-            user_data['password_hash'],
+            user_data['password'],
             user_data.get('full_name'),
             user_data.get('company_name'),
             user_data.get('phone'),

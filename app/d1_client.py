@@ -97,7 +97,7 @@ async def init_db():
     CREATE TABLE IF NOT EXISTS users (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         email TEXT UNIQUE NOT NULL,
-        password_hash TEXT NOT NULL,
+        password TEXT NOT NULL,
         full_name TEXT,
         company_name TEXT,
         phone TEXT,
@@ -201,7 +201,7 @@ async def init_db():
         admin_pass_hash = hash_password(settings.APP_ADMIN_PASS)
         await execute_sql(
             """
-            INSERT INTO users (email, password_hash, full_name, is_admin, is_approved)
+            INSERT INTO users (email, password, full_name, is_admin, is_approved)
             VALUES (?, ?, ?, 1, 1)
             """,
             [settings.APP_ADMIN_MAIL, admin_pass_hash, "Administrador"]
