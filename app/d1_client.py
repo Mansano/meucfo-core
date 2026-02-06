@@ -13,9 +13,9 @@ logger = logging.getLogger(__name__)
 
 class D1Client:
     def __init__(self):
-        self.account_id = settings.CLOUDFLARE_ACCOUNT_ID
-        self.database_id = settings.CLOUDFLARE_DATABASE_ID
-        self.api_token = settings.CLOUDFLARE_API_TOKEN
+        self.account_id = settings.CLOUDFLARE_ACCOUNT_ID.strip()
+        self.database_id = settings.CLOUDFLARE_DATABASE_ID.strip()
+        self.api_token = settings.CLOUDFLARE_API_TOKEN.strip()
         self.base_url = f"https://api.cloudflare.com/client/v4/accounts/{self.account_id}/d1/database/{self.database_id}"
         self.headers = {
             "Authorization": f"Bearer {self.api_token}",
