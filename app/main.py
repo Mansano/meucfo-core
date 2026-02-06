@@ -163,6 +163,48 @@ async def get_config():
         }
     }
 
+from pydantic import BaseModel
+class D1Query(BaseModel):
+    sql: str
+    params: list = []
+
+@app.post("/api/d1/query")
+async def proxy_d1_query(query: D1Query):
+    """
+    Proxy temporário para permitir que o frontend execute SQL diretamente.
+    ATENÇÃO: Isso deve ser substituído por rotas específicas no futuro por segurança.
+    """
+    try:
+        # Usar o cliente D1 já configurado
+        result = await execute_sql(query.sql, query.params)
+        
+        # O cliente D1 retorna o objeto 'result' interno da Cloudflare ou um dict customizado
+        # Precisamos garantir que retorne no formato que o frontend espera (envelope Cloudflare)
+        
+        # Se result já tem "success", provavelmente é a resposta crua
+        if "success" in result:
+             return result
+             
+        # Caso contrário, encapsular (o execute_sql as vezes retorna só o data)
+        # Verificando app/d1_client.py: execute() retorna result.get("result", [])[0] se sucesso
+        # O frontend espera a resposta COMPLETA da API da Cloudflare: { success: true, part: ..., result: [...] }
+        
+        # Vamos usar o client diretamente para ter a resposta crua para esse proxy
+        from app.d1_client import d1_client
+        raw_response = await d1_client.execute(query.sql, query.params)
+        
+        # Verificar se houve erro no execute
+        if isinstance(raw_response, dict) and "success" in raw_response and raw_response["success"] is False:
+            return raw_response
+
+        # O d1_client.execute atual já retorna a estrutura processada das linhas
+        # O frontend espera: { success: true, result: [ { results: [rows], meta: ... } ] }
+        return {"success": True, "result": [raw_response]}
+        
+    except Exception as e:
+        logger.error(f"Erro no proxy D1: {e}")
+        return {"success": False, "errors": [{"message": str(e)}]}
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(
