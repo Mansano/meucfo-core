@@ -114,11 +114,11 @@ async def log_requests(request: Request, call_next):
         raise e
 
 # Incluir routers
-app.include_router(auth.router, prefix="/auth", tags=["Autenticação"])
-app.include_router(admin.router, prefix="/admin", tags=["Administração"])
-app.include_router(dashboard.router, prefix="/dashboard", tags=["Dashboard"])
-app.include_router(pricing.router, prefix="/pricing", tags=["Precificação"])
-app.include_router(analysis.router, prefix="/analysis", tags=["Análise"])
+app.include_router(auth.router, prefix="/api/auth", tags=["Autenticação"])
+app.include_router(admin.router, prefix="/api/admin", tags=["Administração"])
+app.include_router(dashboard.router, prefix="/api/dashboard", tags=["Dashboard"])
+app.include_router(pricing.router, prefix="/api/pricing", tags=["Precificação"])
+app.include_router(analysis.router, prefix="/api/analysis", tags=["Análise"])
 
 
 # Rotas principais
@@ -140,7 +140,7 @@ async def dashboard_page(request: Request):
         )
     return "Templates not loaded"
 
-@app.get("/health")
+@app.get("/api/health")
 async def health_check():
     return {
         "status": "healthy",
