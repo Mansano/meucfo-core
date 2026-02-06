@@ -246,6 +246,20 @@ async def debug_test_id():
         "raw_query_str_result": sql_result_str
     }
 
+@app.get("/api/debug/logs")
+async def debug_logs():
+    """Rota temporária para ver logs do sistema"""
+    import subprocess
+    try:
+        # Tenta pegar os últimos 50 logs do serviço
+        result = subprocess.check_output(
+            ["journalctl", "-u", "meucfo-ai", "-n", "100", "--no-pager"],
+            stderr=subprocess.STDOUT
+        )
+        return {"logs": result.decode("utf-8").split("\n")}
+    except Exception as e:
+        return {"error": str(e)}
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(
