@@ -11,8 +11,8 @@ from app.models.user import TokenData
 
 # Configuração de hash de senha
 pwd_context = CryptContext(
-    schemes=["bcrypt_sha256"],
-    default="bcrypt_sha256",
+    schemes=["bcrypt", "bcrypt_sha256"],
+    default="bcrypt",
     deprecated="auto",
 )
 
